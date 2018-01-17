@@ -15,26 +15,31 @@ typedef struct dllist dllist;
 void insert(int new, dllist *lst) {
 
     // Create the new element
-    dllist *el = malloc(sizeof(dllist));
+    dllist *el;
+    dllist *temp = malloc(sizeof(dllist));
     el = lst;
+    temp -> val = new;
 
     // Loop in our list to find the correct place to insert the new element
     while(el -> next != NULL && el -> val < new) {
         printf("val is %d\n", el -> val);
         el = el -> next;
     }
+    printf("el val is %d\n", el -> val);
 
-    puts("Out of loop");
-    if(el -> next == NULL) {
-        el -> next -> val = new;
-        el -> next -> next = NULL;
-        el -> next -> prev = el;
+    if(el -> val < new) {
+        puts("after last");
+        el -> next = temp;
+        temp -> prev = el;
+        temp -> next = NULL;
     } else {
-        el -> prev -> next = el;
-        el -> next -> prev = el;
-
-    }
-
+        puts("before last");
+        temp -> prev = el;
+        temp -> next = el -> next;
+        temp -> val = el -> val;
+        el -> next = temp;
+        el -> val = new;
+    } 
 }
 
 void main(void) {
@@ -58,19 +63,17 @@ void main(void) {
     ages2 -> val = 8;
     ages3 -> val = 10;
 
-    printf("%d\n", ages -> val);
-    printf("%d\n", ages -> next -> val);
-
     // Insert new element
-    // insert(28, ages);
-    dllist *el = malloc(sizeof(dllist));
-    el = ages;
+    insert(11, ages);
 
     puts("Inserted.");
 
-    printf("%d\n", el -> val);
-    printf("%d\n", el -> next -> next -> next -> next);
-
     // Printing values
+    printf("first %d\n", ages -> val);
+    printf("second %d\n", ages -> next -> val);
+    printf("third %d\n", ages -> next -> next -> val);
+    printf("fourth %d\n", ages -> next -> next -> next -> val);
+    printf("fifth %d\n", ages -> next -> next -> next -> next -> val);
+
 }
 
