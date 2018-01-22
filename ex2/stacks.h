@@ -1,83 +1,121 @@
+/*
+ *  Here we have auxiliary functions intended to be used by the main program.
+ */
+
+#ifndef STACKS_H_INCLUDED
+#define STACKS_H_INCLUDED
+
 #include <stdio.h>
 
-#define MAXPILHA 20 //tamanho maximo da pilha
+#define MAXSTACK 20
 
-struct pilha {
-    int topo;
-    int item [MAXPILHA];
+/* Define our Duracell type */
+struct stack {
+    int top;
+    int item[MAXSTACK];
 };
+typedef struct stack stack;
 
-//funcao para inicializar a pilha
-void iniciaPilha(struct pilha *p) {
-    p->topo = -1;
+/* Initialize our stack */
+void initialize(stack *p) {
+    p -> top = -1;
 }
 
-//funcao para esvaziar pilha
-int esvaziaPilha(struct pilha *p) {
-    while(p->topo > -1) {
-        p->item[p->topo] = -1; //usamos -1 para evitar trabalhar com valores nulos
-        p->topo = p->topo - 1; //diminui a posicao do topo
+/* Returns the stack position */
+int top(stack *p) {
+    return p -> top;
+}
+
+/* Remove all elements from to stack */
+int empty(stack *p) {
+    while(top(p) > -1) {
+        p -> item[top(p)] = -1;   // -1 so we don't use negative values
+        p -> top = top(p) - 1;    // top goes down
     }
+
     return 0;
-    
 }
 
-//funcao para retornar a posicao do topo da pilha
-int topo(struct pilha *p) {
-    return p->topo;
-    
+/* Check if the stack is empty */
+int isempty(stack *p) {
+    if(top(p) == -1) {
+        return 1;
+   } else {
+        return -1;
+   }
 }
 
-//funcao para verificar se a pilha está vazia
-int pilhaVazia(struct pilha *p) {
-   if (p->topo == -1) 
-    return 1; //verdadeiro é 1
-   else
-    return 0; //falso é 0
-
-}
-
-//funcao para verificar se a pilha está cheia
-int pilhaCheia(struct pilha *p) {
-    if (p->topo + 1 == MAXPILHA) 
-    return 1; //verdadeiro é 1
-   else
-    return 0; //falso é 0
-    
-}
-
-//funcao para empilhar um elemento na pilha
-int empilha(int d, struct pilha *p) {
-    if(pilhaCheia(p) == 0) {
-        p->topo = p->topo + 1;
-        p->item[p->topo] = d;
-        
+/* Check if the stack is full */
+int isfull(stack *p) {
+    if(top(p) + 1 == MAXSTACK) {
+        return 1;
+    } else {
+        return -1;
     }
-    return 0;
 }
 
-//funcao para desempilhar o primeiro elemento da fila
-int desempilha(int d, struct pilha *p) {
-    if(pilhaVazia(p) == 0) {
-        int retorno = p->item[p->topo];
-        p->item[p->topo] = -1; //usamos -1 para evitar trabalhar com valores nulos
-        p->topo = p->topo - 1;
+/* Put a new element in the stack */
+int put(int d, stack *p) {
+    if(!isfull(p)) {
+        p -> top = top(p) + 1;
+        p -> item[top(p)] = d;
+        return d;
     }
-    return 0;
+    return -1;
+}
+
+/* Get the last element from the stack */
+int pop(stack *p) {
+    if(!isempty(p)) {
+        int element = p -> item[top(p)];
+        p -> item[top(p)] = -1;
+        p -> top = top(p) - 1;
+        return element;
+    }
+    return -1;
+}
+
+/* Print the stack's elements */
+void printstack(stack *p) {
+    /* Create a temporary stack */
+    stack *temp;
+    initialize(temp);
+
+    /* Pop, print and put back elements on stack */
+    while(!isempty(p)) {
+        int el = pop(p);
+        printf("%d\n", el);
+        put(el, temp);
+    }
+
+    while(!isempty(temp)) {
+        put(pop(temp), p);
+    }
+}
+
+/* Remove one specific element from the stack */
+int drop(int d, stack *p) {
+    /* Create a new temporary stack */
+    stack *temp;
+    initialize(temp);
+
+    /* Look for the element wanted */
+    while(put(pop(p), temp) != d && top(p) > 0) {
+        /* Just keep going */
+    }
+
+    /* The element was found, remove it */
+    if(top(p) > -1) {
+        pop(temp);
+    }
+
+    /* Now put back the itens */
+    while(put(pop(temp), p) > -1) {
+        /* Just keep going */
+    }
     
-}
-
-
-
-int main()
-{
-    struct pilha *variavel_pilha; //cria uma variavel do tipo "pilha"
-    iniciaPilha(variavel_pilha); //inicializa a pilha
-    empilha(9,variavel_pilha); //empilha o numero 9
-    printf("%d\n",variavel_pilha->item[topo(variavel_pilha)]);
-
     return 0;
 }
 
-
+#endif
 
