@@ -1,0 +1,125 @@
+
+
+
+Step 0:                                                         Stack
++------+---------------------------------------+        +-------------------+
+|   V  |   A       B       C       D       E   |        | Visited: A        |
+| Path |   0      inf     inf     inf     inf  |        | tempSum: 0        |
+| Prev |  null   null    null    null    null  |        | curPath:          |
++------+---------------------------------------+        +-------------------+
+
+Step 1:                                                         Stack
++------+---------------------------------------+        +-------------------+
+|   V  |   A       B       C       D       E   |        | Visited: A        |
+| Path |   0      inf     inf     inf     inf  |        | tempSum:          |
+| Prev |  null   null    null    null    null  |        | curPath:          |
++------+---------------------------------------+        | Neighbours: C,E   |
+                                                        | edgeWeights: 8,2  |
+                                                        +-------------------+
+min = E
+Visited(E)?
+False
+tempSum + min.weight > A.Path // 0 > 0?
+False
+No other neighbour
+C.Path = 8, tempSum = 2, curPath = A-E
+goto E
+
+Step 2:                                                         Stack
++------+---------------------------------------+        +-------------------+
+|   V  |   A       B       C       D       E   |        | Visited: A,E      |
+| Path |   0      inf      8      inf      2   |        | tempSum: 2        |
+| Prev |  null   null      A     null      A   |        | curPath: A-E      |
++------+---------------------------------------+        | Neighbours: D     |
+                                                        | edgeWeights: 6    |
+                                                        +-------------------+ 
+min = D
+Visited(D)?
+False
+tempSum + min.weight > C.Path // 2 + 6 > 8?
+False
+Next
+No other neighbour
+D.Path = 8, tempSum = 8, curPath = A-E-D
+goto D
+
+Step 3:                                                         Stack
++------+---------------------------------------+        +-------------------+
+|   V  |   A       B       C       D       E   |        | Visited: A,E,D    |
+| Path |   0      inf      8       8       2   |        | tempSum: 8        |
+| Prev |  null   null      A       E       A   |        | curPath: A-E-D    |
++------+---------------------------------------+        | Neighbours: A,C   |
+                                                        | edgeWeights: 2,5  |
+                                                        +-------------------+
+min = A
+Visited(A)?
+True
+tempSum + min.weight > A.path? // 2 + 6 + 5 > 0?
+True
+Next
+min = C
+Visited(C)?
+False
+tempSum + min.weight > D.path? // 2 + 6 + 5 > 8?
+True
+Next
+No other neighbour
+tempSum = 8, curPath = A-C
+goto C
+
+Step 4:                                                         Stack
++------+---------------------------------------+        +-------------------+
+|   V  |   A       B       C       D       E   |        | Visited: A,E,D,C  |
+| Path |   0      inf      8       8       2   |        | tempSum: 8        |
+| Prev |  null   null      A       E       A   |        | curPath: A-C      |
++------+---------------------------------------+        | Neighbours: B     |
+                                                        | edgeWeights: 4    |
+                                                        +-------------------+
+min = B
+Visited(B)?
+False
+No other paths to consider
+Break
+Next
+No other neighbour
+B.Path = 12, tempSum = 12, curPath = A-C-B
+goto B
+
+Step 5:                                                         Stack
++------+---------------------------------------+        +-------------------+
+|   V  |   A       B       C       D       E   |        | Visited: A,E,D,C,B|
+| Path |   0      12       8       8       2   |        | tempSum: 12       |
+| Prev |  null     C       A       E       A   |        | curPath: A-C-B    |
++------+---------------------------------------+        | Neighbours: A,D,E |
+                                                        | edgeWeights: 3,1,7|
+                                                        +-------------------+
+min = D
+Visited(D)?
+True
+tempSum + min.weight > D.path? // 8 + 4 + 1 > 8?
+True
+Next
+min = A
+Visited(A)?
+True
+tempSum + min.weight > A.path? // 8 + 4 + 3 > 0?
+True
+Next
+min = E
+Visited(E)?
+True
+tempSum + min.weight > E.path? // 8 + 4 + 7 > 2?
+True
+Next
+No other neighbour
+No other paths to consider
+return
+
++------+---------------------------------------+
+|   V  |   A       B       C       D       E   |
+| Path |   0      12       8       8       2   |
+| Prev |  null     C       A       E       A   |
++------+---------------------------------------+
+
+end
+
